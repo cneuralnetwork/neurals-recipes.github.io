@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neural's Recipes</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Marked.js for Markdown Parsing -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+
+    <!-- Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Tailwind Config -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        sage: {
+                            50: '#f4f7f2',
+                            100: '#e3ebe0',
+                            200: '#c5d9bf',
+                            300: '#9dbf94',
+                            400: '#789f6b',
+                            500: '#5a824e',
+                            600: '#46663c',
+                            800: '#3a5232',
+                            900: '#31442b',
+                        },
+                        cream: '#F9F7F2',
+                        charcoal: '#2D3748',
+                    },
+                    fontFamily: {
+                        serif: ['Playfair Display', 'serif'],
+                        sans: ['Lato', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="h-screen flex flex-col overflow-hidden font-sans">
+
+    <!-- Navbar -->
+    <header class="bg-white shadow-sm z-10 py-4 px-8 flex justify-between items-center border-b border-sage-100">
+        <div class="flex items-center gap-3">
+            <div class="bg-sage-600 text-white p-2 rounded-lg">
+                <i data-lucide="chef-hat" class="w-6 h-6"></i>
+            </div>
+            <h1 class="font-serif text-2xl font-bold text-sage-900 tracking-wide">NEURAL'S <span class="text-sage-500">RECIPES</span></h1>
+        </div>
+        <div class="text-sm text-sage-600 italic hidden md:block">
+            "ज़िंदगी और खाना, दोनों सही आँच पर ही स्वाद देते हैं।"
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-1 flex overflow-hidden">
+        
+        <!-- LEFT: Recipe List -->
+        <aside class="w-full md:w-1/3 lg:w-1/4 bg-white border-r border-sage-200 overflow-y-auto flex flex-col">
+            <div class="p-6 sticky top-0 bg-white z-10 border-b border-gray-100">
+                <h2 class="font-serif text-xl text-gray-800 mb-2">My Recipes</h2>
+                <div class="relative">
+                    <i data-lucide="search" class="absolute left-3 top-2.5 text-gray-400 w-4 h-4"></i>
+                    <input type="text" placeholder="Filter recipes..." class="w-full pl-10 pr-4 py-2 bg-sage-50 border border-sage-100 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-sage-300 transition-all">
+                </div>
+            </div>
+            
+            <div id="recipe-list" class="flex-1 p-4 space-y-3">
+                <!-- Recipes will be injected here -->
+            </div>
+        </aside>
+
+        <!-- RIGHT: Dashboard / Kanban View -->
+        <section class="hidden md:flex flex-1 flex-col bg-cream relative">
+            <!-- Empty State -->
+            <div id="empty-state" class="absolute inset-0 flex flex-col items-center justify-center text-sage-400 z-0">
+                <i data-lucide="utensils-crossed" class="w-24 h-24 mb-4 opacity-20"></i>
+                <p class="font-serif text-xl opacity-60">Select a recipe to view details</p>
+            </div>
+
+            <!-- Content Container (Hidden initially) -->
+            <div id="nutrition-dashboard" class="flex-1 flex flex-col p-8 z-10 hidden fade-in overflow-y-auto">
+                
+                <!-- Header Area -->
+                <div class="flex justify-between items-start mb-8">
+                    <div>
+                        <span class="bg-sage-100 text-sage-800 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider mb-2 inline-block" id="dash-category">Dinner</span>
+                        <h2 id="dash-title" class="font-serif text-4xl text-sage-900 mb-2">Recipe Title</h2>
+                        <div class="flex items-center gap-4 text-gray-500 text-sm">
+                            <span class="flex items-center gap-1"><i data-lucide="clock" class="w-4 h-4"></i> <span id="dash-time">30m</span></span>
+                            <span class="flex items-center gap-1"><i data-lucide="users" class="w-4 h-4"></i> <span id="dash-servings">2 people</span></span>
+                            <span class="flex items-center gap-1 text-yellow-500"><i data-lucide="star" class="w-4 h-4 fill-current"></i> <span id="dash-rating">4.8</span></span>
+                        </div>
+                    </div>
+                    <div class="h-32 w-32 rounded-full overflow-hidden border-4 border-white shadow-lg ring-1 ring-sage-100">
+                        <img id="dash-image" src="" alt="Recipe" class="w-full h-full object-cover">
+                    </div>
+                </div>
+
+                <!-- Kanban-style Nutritional Board -->
+                <div class="mb-8">
+                    <h3 class="font-serif text-xl text-gray-700 mb-4 flex items-center gap-2">
+                        <i data-lucide="activity" class="w-5 h-5 text-sage-500"></i> Nutritional Values
+                    </h3>
+                    
+                    <!-- The "Kanban" Grid -->
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        <!-- Card 1: Calories -->
+                        <div class="bg-white p-4 rounded-xl shadow-sm border border-sage-100 hover:shadow-md transition-shadow relative overflow-hidden group">
+                            <div class="absolute top-0 right-0 p-2 opacity-10 group-hover:opacity-20 transition-opacity">
+                                <i data-lucide="flame" class="w-12 h-12 text-orange-500"></i>
+                            </div>
+                            <p class="text-xs text-gray-500 uppercase font-bold tracking-wider">Energy</p>
+                            <p class="font-serif text-3xl text-gray-800 mt-1" id="nutri-cal">0</p>
+                            <p class="text-xs text-gray-400 mt-1">kcal</p>
+                            <div class="w-full bg-gray-100 h-1 mt-3 rounded-full overflow-hidden">
+                                <div class="bg-orange-400 h-full w-3/4"></div>
+                            </div>
+                        </div>
+
+                        <!-- Card 2: Protein -->
+                        <div class="bg-white p-4 rounded-xl shadow-sm border border-sage-100 hover:shadow-md transition-shadow relative overflow-hidden group">
+                            <div class="absolute top-0 right-0 p-2 opacity-10 group-hover:opacity-20 transition-opacity">
+                                <i data-lucide="dumbbell" class="w-12 h-12 text-blue-500"></i>
+                            </div>
+                            <p class="text-xs text-gray-500 uppercase font-bold tracking-wider">Protein</p>
+                            <p class="font-serif text-3xl text-gray-800 mt-1" id="nutri-pro">0</p>
+                            <p class="text-xs text-gray-400 mt-1">grams</p>
+                            <div class="w-full bg-gray-100 h-1 mt-3 rounded-full overflow-hidden">
+                                <div class="bg-blue-400 h-full w-1/2"></div>
+                            </div>
+                        </div>
+
+                        <!-- Card 3: Carbs -->
+                        <div class="bg-white p-4 rounded-xl shadow-sm border border-sage-100 hover:shadow-md transition-shadow relative overflow-hidden group">
+                            <div class="absolute top-0 right-0 p-2 opacity-10 group-hover:opacity-20 transition-opacity">
+                                <i data-lucide="wheat" class="w-12 h-12 text-yellow-500"></i>
+                            </div>
+                            <p class="text-xs text-gray-500 uppercase font-bold tracking-wider">Carbs</p>
+                            <p class="font-serif text-3xl text-gray-800 mt-1" id="nutri-carb">0</p>
+                            <p class="text-xs text-gray-400 mt-1">grams</p>
+                            <div class="w-full bg-gray-100 h-1 mt-3 rounded-full overflow-hidden">
+                                <div class="bg-yellow-400 h-full w-2/3"></div>
+                            </div>
+                        </div>
+
+                        <!-- Card 4: Fat -->
+                        <div class="bg-white p-4 rounded-xl shadow-sm border border-sage-100 hover:shadow-md transition-shadow relative overflow-hidden group">
+                            <div class="absolute top-0 right-0 p-2 opacity-10 group-hover:opacity-20 transition-opacity">
+                                <i data-lucide="droplet" class="w-12 h-12 text-red-400"></i>
+                            </div>
+                            <p class="text-xs text-gray-500 uppercase font-bold tracking-wider">Fats</p>
+                            <p class="font-serif text-3xl text-gray-800 mt-1" id="nutri-fat">0</p>
+                            <p class="text-xs text-gray-400 mt-1">grams</p>
+                            <div class="w-full bg-gray-100 h-1 mt-3 rounded-full overflow-hidden">
+                                <div class="bg-red-400 h-full w-1/4"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Area -->
+                <div class="mt-auto bg-white p-6 rounded-xl border border-sage-200 flex items-center justify-between shadow-sm">
+                    <div>
+                        <p class="text-sm text-gray-500">Ready to cook?</p>
+                        <h4 class="font-bold text-gray-800">View the full preparation guide</h4>
+                    </div>
+                    <button onclick="openRecipeModal()" class="bg-sage-600 hover:bg-sage-700 text-white px-6 py-3 rounded-lg shadow-md transition-all flex items-center gap-2 transform active:scale-95">
+                        <span>Read Full Recipe</span>
+                        <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Full Recipe Modal -->
+    <div id="recipe-modal" class="fixed inset-0 bg-sage-900/40 backdrop-blur-sm z-50 hidden flex justify-end transition-opacity duration-300">
+        <div class="bg-white w-full max-w-2xl h-full shadow-2xl flex flex-col transform transition-transform duration-300 translate-x-full" id="modal-content">
+            
+            <!-- Modal Header -->
+            <div class="p-6 border-b border-gray-100 flex justify-between items-center bg-white sticky top-0 z-10">
+                <h2 id="modal-title" class="font-serif text-2xl text-sage-900">Recipe Details</h2>
+                <button onclick="closeRecipeModal()" class="p-2 hover:bg-gray-100 rounded-full transition-colors">
+                    <i data-lucide="x" class="w-6 h-6 text-gray-500"></i>
+                </button>
+            </div>
+
+            <!-- Modal Content (Markdown rendered here) -->
+            <div class="flex-1 overflow-y-auto p-8 bg-white">
+                <div id="markdown-container" class="markdown-body text-gray-700">
+                    <!-- Markdown content goes here -->
+                </div>
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="p-4 border-t border-gray-100 bg-gray-50 text-center text-xs text-gray-400">
+                Rendered from .md source
+            </div>
+        </div>
+    </div>
+
+    <!-- Main JavaScript -->
+    <script src="js/main.js"></script>
+</body>
+</html>
