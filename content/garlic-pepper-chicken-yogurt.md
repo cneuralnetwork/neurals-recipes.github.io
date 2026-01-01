@@ -4,7 +4,7 @@ category: "Lunch"
 time: "25 min"
 servings: "1-2"
 rating: "4.7"
-image: "https://images.unsplash.com/photo-1604503468506-a8da13d82791?q=80&w=600&auto=format&fit=crop"
+image: "https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?q=80&w=600&auto=format&fit=crop"
 nutrition:
   cal: 325
   pro: 43
