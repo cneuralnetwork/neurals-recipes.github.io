@@ -81,3 +81,4 @@ Important for hormones and vitamin absorption. Very calorie-dense (1 g fat = 9 k
 * Fats: 5 g × 9 = 45 kcal
 * Total ≈ 277–350 kcal (matches the energy shown)
 
+
